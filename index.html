@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>Калькулятор судьбы</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #1e1e2f; color: white; }
+        .container { margin-top: 50px; }
+        input, button { padding: 10px; margin: 10px; }
+        #step2, #resultBox { display: none; }
+        .result { font-size: 24px; font-weight: bold; margin-top: 20px; }
+    </style>
+</head>
+<body>
+   
+
+    <div class="container">
+        <h1>Destiny Code Calculator</h1>
+        <label>Enter Your Birth Date:</label>
+        <input type="date" id="birthdate">
+        <button onclick="calculateFirstStep()">Find My Palace</button>
+        <div id="step1Result" class="result"></div>
+        
+        <div id="step2">
+            <button onclick="calculateSecondStep()">Continue to Step 2</button>
+            <div id="finalResult" class="result"></div>
+            <div id="resultBox"></div>
+        </div>
+    </div>
+
+    <script>
+        function sumDigits(num) {
+            while (num > 9) {
+                num = num.toString().split('').reduce((a, b) => a + parseInt(b), 0);
+            }
+            return num;
+        }
+
+        function calculateFirstStep() {
+            let birthdate = document.getElementById("birthdate").value;
+            if (!birthdate) {
+                alert("Please enter a valid birth date.");
+                return;
+            }
+
+            let [year, month, day] = birthdate.split('-').map(Number);
+            if (month < 2 || (month === 2 && day < 3)) {
+                year -= 1;  // Если до 3 февраля, берем предыдущий год
+            }
+
+            let firstNumber = sumDigits(year + month + day);
+            document.getElementById("step1Result").innerText = "Your Destiny Palace: " + firstNumber;
+            document.getElementById("step2").style.display = "block";
+            document.getElementById("finalResult").innerText = "";
+            document.getElementById("resultBox").innerText = "";
+        }
+
+        function calculateSecondStep() {
+            let birthdate = document.getElementById("birthdate").value;
+            let [year, month, day] = birthdate.split('-').map(Number);
+            if (month < 2 || (month === 2 && day < 3)) {
+                year -= 1;  
+            }
+
+            let first = sumDigits(year + month + day);
+            let second = sumDigits(day + month);
+            let third = sumDigits(year);
+
+            let destinyCode = `${first} - ${second} - ${third}`;
+            document.getElementById("finalResult").innerText = "Your Complete Destiny Code: " + destinyCode;
+
+            let descriptions = {
+                1: "The Palace of Leadership and Independence",
+                2: "The Palace of Harmony and Diplomacy",
+                3: "The Palace of Creativity and Expression",
+                4: "The Palace of Stability and Hard Work",
+                5: "The Palace of Change and Freedom",
+                6: "The Palace of Responsibility and Service",
+                7: "The Palace of Wisdom and Spirituality",
+                8: "The Palace of Power and Ambition",
+                9: "The Palace of Compassion and Idealism"
+            };
+
+            let explanation = `Your Destiny Code ${destinyCode} represents: ${descriptions[first]} • Path of ${descriptions[second]} • Inner Drive of ${descriptions[third]}`;
+
+            document.getElementById("resultBox").innerText = explanation;
+            document.getElementById("resultBox").style.display = "block";
+        }
+    </script>
+</body>
+</html>
